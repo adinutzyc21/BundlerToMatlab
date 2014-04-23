@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# renames all the files so that they have extension *..txt instead of *.key
+
+DIR=$1
+find $DIR -depth -name "*.txt" -exec sh -c 'mv "$1" "${1%.txt}.key"' _ {} \;

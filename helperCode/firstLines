@@ -1,0 +1,26 @@
+#!/bin/bash
+
+echo 'DL     VL'>results.txt
+
+dir1=modelsDL/
+dir2=modelsVL/
+cd $dir1
+files='*.key'
+a=( $files )
+cd ..
+
+len=${#a[@]}
+for (( i=0; i<$len; i++ ))
+do
+	file=${a[i]}
+	file1=$dir1$file
+	line1=$(sed -n '1p' $file1)
+	b=( $line1 )
+	file2=$dir2$file
+	line2=$(sed -n '1p' $file2)
+	c=( $line2 )
+	
+	echo "${b[0]} ${c[0]}">>results.txt
+
+done
+

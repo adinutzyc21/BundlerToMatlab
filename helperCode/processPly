@@ -1,0 +1,15 @@
+#!/bin/bash
+
+procf="../process/"
+plyf="../ply/"
+
+plyfile=$1
+if [ "$plyfile" = "" ]; then
+	plyfile="option-0000.ply"
+fi
+
+plyfile=$plyf$plyfile
+outply="ply.txt"
+outply=$procf$outply
+
+sed '1,13d' $plyfile > $outply

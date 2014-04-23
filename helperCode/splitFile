@@ -1,0 +1,60 @@
+#!/bin/bash
+
+# Note this is already being called from Matlab, don't worry about it!
+
+# * usage
+# ./splitfile FILENAME
+# * splits the FILENAME file located in the folder "out" for further processing by Matlab
+#    * if no parameters are given FILENAME defaults to "bundle.out"
+
+# * recommended workflow: copy the bundle.out file (and optionally rename it) to the ../process/ folder and run
+# ./splitfile bundle.out
+
+outf="../out/"
+procf="../process/"
+bundfile=$1
+if [ "$bundfile" = "" ]; then
+	bundfile="bundle.out"
+fi
+
+bundfile=$outf$bundfile
+topfile="camfile.txt"
+topfile=$procf$topfile
+botfile="ptsfile0.txt"
+botfile=$procf$botfile
+aux="aux.txt"
+aux=$procf$aux
+
+line=$(sed -n '2p' $bundfile)
+a=( $line )
+
+num_cams=${a[0]}
+num_pts=${a[1]}
+
+tail -n +3 $bundfile > $aux
+
+num_cams2=$((5*$num_cams+2))
+num_pts2=$((3*$num_pts))
+
+echo -ne '' > $topfile
+echo -ne  '' > $botfile
+
+head -n $num_cams2 $aux >> $topfile
+tail -n $num_pts2 $aux >> $botfile
+
+rm $aux
+
+python format_file.py $procf
+rm $botfile
+
+# this creates a file with o# nly x,y,z,r,g,b information 
+# newfile="ptsfilePosCol.txt"
+# newfile=$fold$newfile
+# 
+# awk 'NR % 3 != 0' $botfile > $newfile 
+# 
+# # this creates the viewlist file
+# viewlist="ptsfileViewList.txt"
+# viewlist=$fold$viewlist
+# 
+# awk 'NR % 3 == 0' $botfile > $viewlist 
